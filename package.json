@@ -1,5 +1,5 @@
 {
-	"name": "shb-ext-demo",
+	"name": "shb-ext-crawl",
 	"description": "shb插件演示",
 	"version": "0.0.0",
 	"repository": "https://github.com/wszgrcy/shb-ext-demo",
@@ -27,8 +27,9 @@
 		"typescript-eslint": "^8.26.0"
 	},
 	"dependencies": {
+		"@cyia/crawl": "^0.0.10",
 		"@shenghuabi/sdk": "^0.1.0",
-		"duck-duck-scrape": "^2.2.7",
+		"cosmiconfig": "^9.0.0",
 		"rxjs": "^7.8.2",
 		"valibot": "1.0.0"
 	}

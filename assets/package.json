@@ -1,8 +1,8 @@
 {
-	"name": "shb-ext-demo",
-	"displayName": "shb-ext-demo",
+	"name": "shb-crawl",
+	"displayName": "shb-crawl",
 	"description": "生花笔插件演示",
-	"version": "0.0.2",
+	"version": "0.0.9",
 	"publisher": "wszgrcy",
 	"repository": "https://github.com/wszgrcy/shb-ext-demo",
 	"engines": {
