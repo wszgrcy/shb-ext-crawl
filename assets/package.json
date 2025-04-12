@@ -2,11 +2,11 @@
 	"name": "shb-crawl",
 	"displayName": "shb-crawl",
 	"description": "生花笔插件演示",
-	"version": "0.0.14",
+	"version": "0.0.18",
 	"publisher": "wszgrcy",
 	"repository": "https://github.com/wszgrcy/shb-ext-demo",
 	"engines": {
-		"vscode": "^1.98.0"
+		"vscode": "^1.98.10"
 	},
 	"categories": [
 		"Other"
@@ -19,6 +19,33 @@
 	],
 	"main": "./index.js",
 	"contributes": {
-		"commands": []
+		"commands": [],
+		"configuration": [
+			{
+				"title": "网络搜索",
+				"properties": {
+					"shb-crawl": {
+						"type": "object",
+						"additionalProperties": false,
+						"properties": {
+							"browser": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"headless": {
+										"type": "boolean",
+										"default": true
+									}
+								},
+								"required": []
+							}
+						},
+						"required": [
+							"browser"
+						]
+					}
+				}
+			}
+		]
 	}
 }

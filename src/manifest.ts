@@ -13,15 +13,14 @@ export const manifestFactory = (options: { browserDir: string }): ManifestFactoy
             client: './workflow/node/network-search/client/index.js',
             runner: NetworkSearchRunner(input, explorer, options.browserDir),
             config: {
-              type: 'crawl',
+              type: 'network-search',
               label: `网络搜索`,
-              // icon: 'manage_search',
               icon: {
                 fontIcon: 'search-fuzzy',
                 fontSet: 'codicon',
               },
               color: 'accent',
-              help: [`- puppeteer访问网络供对话使用`].join('\n'),
+              help: [`- 使用puppeteer搜索网页并进行智能信息提取`].join('\n'),
               outputs: [[{ label: '转文本', value: 'toString' }]],
             },
           },
