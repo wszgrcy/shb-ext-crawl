@@ -2,7 +2,7 @@
 	"name": "shb-crawl",
 	"displayName": "shb-crawl",
 	"description": "生花笔插件演示",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"publisher": "wszgrcy",
 	"repository": "https://github.com/wszgrcy/shb-ext-demo",
 	"engines": {
