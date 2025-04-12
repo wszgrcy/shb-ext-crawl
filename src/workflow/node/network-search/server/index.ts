@@ -2,7 +2,7 @@ import { ManifestInput } from '@shenghuabi/sdk/server';
 import { NODE_DEFINE } from '../common/define';
 import { init } from '@cyia/crawl';
 import { PublicExplorer } from 'cosmiconfig';
-let toMarkdown = (content: string) => `你是一个信息提取专家
+const toMarkdown = (content: string) => `你是一个信息提取专家
 用户的搜索主题为: "${content}"
 请根据用户的搜索主题提取输入内容,提取规则如下
 1. 只提取输入内容中符合搜索主题的内容
@@ -12,15 +12,20 @@ let toMarkdown = (content: string) => `你是一个信息提取专家
 
 提取完成后,直接返回`;
 
-export function NetworkSearchRunner(input: ManifestInput, explorer: PublicExplorer) {
+export function NetworkSearchRunner(input: ManifestInput, explorer: PublicExplorer, dir: string) {
   return class extends input.provider.workflow.NodeRunnerBase {
-    #chatUtil = input.inject(input.provider.root.ChatUtilService);
 
     override async run() {
-      let instance = this.injector.get(input.provider.root.ChatService);
-      console.log('cwd',process.cwd());
-      let content = this.inputValueObject$$()['$content'];
-      let browser = await init({ cacheDir: process.cwd(), headless: false });
+      const instance = this.injector.get(input.provider.root.ChatService);
+      const content = this.inputValueObject$$()['$content'];
+      const browser = await init({ cacheDir: dir, headless: false });
+      this.abortSignal?.addEventListener(
+        'abort',
+        () => {
+          browser.browser.close();
+        },
+        { once: true }
+      );
       browser.registerCustom('extractMessage', async (input, page) => {
         const streamData = this.emitter.createLLMData({
           node: this.node,
@@ -31,15 +36,19 @@ export function NetworkSearchRunner(input: ManifestInput, explorer: PublicExplor
             content: '',
           },
         });
-        let res = (await instance.chat()).stream({
-          messages: [
-            {
-              role: 'system',
-              content: [{ text: toMarkdown(content), type: 'text' }],
-            },
-            { role: 'user', content: [{ text: page.getVariable(input.input), type: 'text' }] },
-          ],
-        });
+        
+        const res = (await instance.chat()).stream(
+          {
+            messages: [
+              {
+                role: 'system',
+                content: [{ text: toMarkdown(content), type: 'text' }],
+              },
+              { role: 'user', content: [{ text: page.getVariable(input.input), type: 'text' }] },
+            ],
+          },
+          { signal: this.abortSignal }
+        );
         for await (const item of res) {
           const value = item.content;
           streamData.value = value;
@@ -49,15 +58,15 @@ export function NetworkSearchRunner(input: ManifestInput, explorer: PublicExplor
         }
         return { title: await page.page.title(), content: streamData.value };
       });
-      let data = this.getParsedNode(NODE_DEFINE(input.componentDefine));
-      let file = await explorer.load(data.data.value).then((item) => item?.config);
+      const data = this.getParsedNode(NODE_DEFINE(input.componentDefine));
+      const file = await explorer.load(data.data.value).then((item) => item?.config);
       if (file.global) {
         browser.setConfig(file.global);
       }
       console.log('输入变量', this.inputValueObject$$());
 
-      let result2 = await browser.runQueue(file.actions, this.inputValueObject$$());
-      browser.browser.close()
+      const result2 = await browser.runQueue(file.actions, this.inputValueObject$$());
+      browser.browser.close();
       return async (outputName: string) => {
         if (outputName === 'toString') {
           return {

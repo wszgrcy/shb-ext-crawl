@@ -1,6 +1,6 @@
 import { ActionItemInputType, GlobalConfigInputType } from '@cyia/crawl';
 
-export interface CrawlConfig {
+export interface CrawlRule {
   global: GlobalConfigInputType;
   // 添加自定义类型
   actions: ActionItemInputType[];

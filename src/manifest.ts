@@ -1,17 +1,17 @@
-import { ManifestFactoy, NormalCollectionInlineType } from '@shenghuabi/sdk/server';
+import { ManifestFactoy } from '@shenghuabi/sdk/server';
 import { NetworkSearchRunner } from './workflow/node/network-search/server';
 import * as vscode from 'vscode';
 import { cosmiconfig } from 'cosmiconfig';
 // 不推荐变更此导出,未来可能会在其他地方使用
-export const manifestFactory = (options: any): ManifestFactoy => {
-  let explorer = cosmiconfig(' ');
+export const manifestFactory = (options: { browserDir: string }): ManifestFactoy => {
+  const explorer = cosmiconfig(' ');
   return (input) => {
     return {
       workflow: {
         node: [
           {
-            client: './workflow/node/duck-duck-go/client/index.js',
-            runner: NetworkSearchRunner(input, explorer),
+            client: './workflow/node/network-search/client/index.js',
+            runner: NetworkSearchRunner(input, explorer, options.browserDir),
             config: {
               type: 'crawl',
               label: `网络搜索`,
@@ -41,12 +41,10 @@ export const manifestFactory = (options: any): ManifestFactoy => {
             if (!filePath) {
               return [];
             }
-            console.log('解析?', filePath);
 
             return explorer
               .load(filePath)
               .then((item) => {
-                console.log('返回', item);
                 return item;
               })
               .then((item) => item?.config)

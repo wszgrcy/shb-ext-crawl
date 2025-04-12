@@ -1,6 +1,5 @@
 import * as v from 'valibot';
 import { ComponentContext, ComponentInput } from '@shenghuabi/sdk/componentDefine';
-import { LLM_CONFIG } from '../../../../define/llm.define';
 
 export function NODE_DEFINE({ Action }: ComponentInput) {
   return v.object({
@@ -26,14 +25,11 @@ export function NODE_DEFINE({ Action }: ComponentInput) {
               Action.valueChange({
                 list: [undefined],
                 debounceTime: 100,
-                when: ([value]: any[], field) => {
-                  console.log('值',value);
-                  
-                  let context = field.context as ComponentContext;
+                when: ([value]: any[], field) => {                  
+                  const context = field.context as ComponentContext;
                   context!
                     .pluginMethod('getRuleInput', [value])
                     .then((list) => {
-                      console.log(list);
                       return list;
                     })
                     .then((list) => context.changeHandleData(field, 'input', 1, list));

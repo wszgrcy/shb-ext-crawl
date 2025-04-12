@@ -8,10 +8,10 @@ const CommonConfig: esbuild.BuildOptions = {
   splitting: false,
   format: 'cjs',
   legalComments: 'external',
-  external: ['vscode'],
+  external: ['vscode','./xhr-sync-worker.js'],
   target: ['es2022', 'node20'],
   charset: 'ascii',
-  mainFields: ['browser', 'module', 'main'],
+  mainFields: ['module', 'main'],
   conditions: ['import', 'require', 'default'],
 };
 // 发布之前构建
@@ -30,7 +30,10 @@ async function main() {
     plugins: [
       copy({
         resolveFrom: 'cwd',
-        assets: [{ from: './assets/*', to: './dist' }],
+        assets: [
+          { from: './assets/**/*', to: './dist' },
+          { from: './node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js', to: './dist' },
+        ],
       }),
     ],
     define: {},

@@ -1,7 +1,7 @@
 // index.js
 
 /**
- * @typedef {import('../type').CrawlConfig} CrawlConfig
+ * @typedef {import('../../src/type').CrawlRule} CrawlConfig
  */
 
 /**
@@ -28,7 +28,7 @@ const myObject = {
             { type: 'extractMessage', output: 'data', input: 'data' },
         ],
         input: 'urlList',
-        concurrency: 3
+        concurrency: 1
     },]
     , inputs: [{
         label: '搜索内容', value: '$content'

@@ -6,7 +6,7 @@
 	"scripts": {
 		"compile": "tsx ./script/build.ts",
 		"compile:prod": "tsx ./script/build.ts --prod",
-		"lint": "eslint",
+		"lint": "eslint ./src --fix",
 		"watch": "tsc -watch -p ./",
 		"local-publish": "rimraf ./dist && npm run compile:prod && cd dist && vsce package --skip-license --allow-star-activation"
 	},
@@ -27,8 +27,8 @@
 		"typescript-eslint": "^8.26.0"
 	},
 	"dependencies": {
-		"@cyia/crawl": "^0.0.10",
-		"@shenghuabi/sdk": "^0.1.0",
+		"@cyia/crawl": "^0.0.12",
+		"@shenghuabi/sdk": "^0.1.2",
 		"cosmiconfig": "^9.0.0",
 		"rxjs": "^7.8.2",
 		"valibot": "1.0.0"
