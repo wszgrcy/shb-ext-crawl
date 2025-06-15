@@ -1,5 +1,6 @@
 import * as v from 'valibot';
 import { ComponentContext, ComponentInput } from '@shenghuabi/sdk/componentDefine';
+import { debounceTime } from 'rxjs';
 
 export function NODE_DEFINE({ Action }: ComponentInput) {
   return v.object({
@@ -22,18 +23,20 @@ export function NODE_DEFINE({ Action }: ComponentInput) {
                   };
                 },
               }),
-              Action.valueChange({
-                list: [undefined],
-                debounceTime: 100,
-                when: ([value]: any[], field) => {                  
-                  const context = field.context as ComponentContext;
-                  context!
-                    .pluginMethod('getRuleInput', [value])
-                    .then((list) => {
-                      return list;
-                    })
-                    .then((list) => context.changeHandleData(field, 'input', 1, list));
-                },
+              Action.valueChange((fn) => {
+                fn({
+                  list: [undefined],
+                })
+                  .pipe(debounceTime(100))
+                  .subscribe(({ list: [value], field }) => {
+                    const context = field.context as ComponentContext;
+                    context!
+                      .pluginMethod('getRuleInput', [value])
+                      .then((list) => {
+                        return list;
+                      })
+                      .then((list) => context.changeHandleData(field, 'input', 1, list));
+                  });
               }),
             ],
           })

@@ -20,7 +20,7 @@ export function NetworkSearchRunner(input: ManifestInput, explorer: PublicExplor
     override async run() {
       const instance = this.injector.get(input.provider.root.ChatService);
       const content = this.inputValueObject$$()['$content'];
-      const data = this.getParsedNode(NODE_DEFINE(input.componentDefine));
+      const data = this.getParsedNode(NODE_DEFINE(input.componentDefine as any));
 
       CHANNEL.info(`节点配置: ${JSON.stringify(data)}`);
       CHANNEL.info(`准备初始化浏览器`);
